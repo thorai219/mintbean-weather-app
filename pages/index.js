@@ -1,29 +1,28 @@
+import Header from "next/head"
 import axios from "axios"
 
 export const getServerSideProps = async () => {
   const apiKey = process.env.NEXT_PUBLIC_WEATHER_API_KEY
   const city = "Toronto"
   const req = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`
-  const res = await axios.get(req)
-  const resTemp = res.data.main["temp"]
-  const resMain = res.data.weather[0].main
+  const { data } = await axios.get(req)
+  const { main, weather } = data
 
   return {
     props: {
-      resTemp,
-      resMain,
+      temperature: main.temp,
+      weather: weather[0].main,
       city
     }
   }
 }
 
-function HomePage({ resTemp, resMain, city }) {
+function HomePage({ temperature, weather, city }) {
   return (
     <div>
-      <h1>Home Page</h1>
-      <h5>{city}</h5>
-      <h5>Temp : {resTemp}</h5>
-      <h5>Weather : {resMain}</h5>
+      <h1>{city}</h1>
+      <h3>Temp : {temperature}</h3>
+      <h3>Weather : {weather}</h3>
     </div>
   )
 }
